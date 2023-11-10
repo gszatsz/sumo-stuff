@@ -7,8 +7,8 @@ import json
 api_endpoint = "https://api.sumologic.com/api/v1/"
 
 # Sumo Logic credentials
-access_key = "YOUR_ACCESS_KEY"
-secret_key = "YOUR_SECRET_KEY"
+$AccessKey = "YourAccessKey"
+$SecretKey = "YourSecretKey"
 
 # Set the number of days for user deletion
 days = 90
@@ -19,8 +19,8 @@ dry_run = True
 # Excludes Sumo Support Account
 exclude_pattern = 'sumosupport'
 
-# Specify whether to exclude inactive users (True or False) by default this will ignore inactive users
-exclude_inactive = True
+# Specify whether to exclude deactivated users (True or False) by default this will ignore deactivated users
+exclude_deactivated = True
 
 # Function to get users from Sumo Logic API
 def get_users():
@@ -72,7 +72,7 @@ for user in users:
 users_to_delete = [user for user in users if not (
     user["email"].lower().startswith(exclude_pattern.lower()) or
     (user["lastLoginTimestamp"] is not None and (now - datetime.strptime(user["lastLoginTimestamp"], "%Y-%m-%dT%H:%M:%S.%fZ")).days <= days) or
-    (exclude_inactive and user["isActive"] is False) or
+    (exclude_deactivated and user["isActive"] is False) or
     'sumosupport' in user["email"].lower()
 )]
 
